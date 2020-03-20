@@ -23,14 +23,21 @@ import MenuBook from '@material-ui/icons/MenuBook';
 import Add from '@material-ui/icons/Add';
 import Person from '@material-ui/icons/Person';
 import DeviceHub from '@material-ui/icons/DeviceHub';
-import './ListStyle.css'
-
+import MyButton from './testButtonActive'
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     maxWidth: 400,
     backgroundColor: theme.palette.background.paper,
+  },
+  ListItem:{
+    padding: '0px 8px 0px 16px',
+  },
+  activeButton:{
+    "&:active": {
+      
+    }
   },
   nested: {
     paddingLeft: theme.spacing(4),
@@ -45,19 +52,16 @@ export default function NestedList() {
   const classes = useStyles();
   const [open,setOpen] = React.useState(false);
   const [open2,setOpen2] = React.useState(false);
-  
   const handleClick = () => {
     setOpen(!open);
   };
   const handleClick2 = () => {
     setOpen2(!open2);
   };
-  const closeChild=(e)=>{
+  const closeChild=()=>{
     if(open || open2){
       setOpen(false);
       setOpen2(false);
-    }else{
-      alert("Closed");
     }
   }
   return (
@@ -66,19 +70,22 @@ export default function NestedList() {
       aria-labelledby="nested-list-subheader"
       className={classes.root}
     >
-        <ListItem button component={Link} to="/" onClick={e => closeChild(e)}>
+      <MyButton />  
+        <ListItem button component={Link} to="/" onClick={() => closeChild()}
+        classes={{root:classes.ListItem}}
+        >
           <ListItemIcon>
             <Add />
           </ListItemIcon>
           <ListItemText primary="แจ้งซ่อม" />
         </ListItem>
-        <ListItem button  component={Link} to="/About">
+        <ListItem button component={Link} to="/Assign" classes={{root:classes.ListItem}}>
           <ListItemIcon>
             <HowToReg />
           </ListItemIcon>
           <ListItemText primary="มอบหมายงาน" />
         </ListItem>
-        <ListItem button onClick={handleClick} className={classes.dropdown}>
+        <ListItem button onClick={handleClick} className={classes.dropdown} classes={{root:classes.ListItem}}>
           <ListItemIcon>
             <TransferWithinAStation />
           </ListItemIcon>
@@ -167,5 +174,6 @@ export default function NestedList() {
           <ListItemText primary="รายงานแจ้งซ่อม" />
         </ListItem>
     </List>
+    
   );
 }
