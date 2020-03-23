@@ -1,5 +1,5 @@
 function createData(
-    name,
+    id,
     no,
     date,
     details,
@@ -11,7 +11,7 @@ function createData(
     status
   ) {
     return {
-      name,
+      id,
       no,
       date,
       details,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -48,6 +48,7 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
+  console.log('stableSort');
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -58,10 +59,10 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "name",maxWidth:5, numeric: true, disablePadding: false, label: "#" },
+  { id: "id",maxWidth:5, numeric: true, disablePadding: false, label: "#" },
   { id: "no", numeric: false, disablePadding: false, label: "รหัส" },
   { id: "date", numeric: false, disablePadding: false, label: "วันที่แจ้ง" },
-  { id: "details",minWidth:300, numeric: false, disablePadding: false, label: "รายละเอียด" },
+  { id: "details",minWidth:250, numeric: false, disablePadding: false, label: "รายละเอียด" },
   { id: "employee",minWidth:90, numeric: false, disablePadding: false, label: "ผู้แจ้ง" },
   { id: "department",maxWidth:50, numeric: false, disablePadding: false, label: "แผนก" },
   { id: "branch", numeric: false, disablePadding: false, label: "สาขา" },
@@ -158,6 +159,7 @@ const EnhancedTableToolbar = props => { //ตกแต่ง toolbar
   const classes = useToolbarStyles();
   const { numSelected } = props;
 
+
   return (
     <Toolbar
       className={clsx(classes.root, { //แถบแสดง snackbar ด้านบนเวลาเลือกข้อมูล 1 ,2 ... แถว
@@ -183,20 +185,18 @@ const EnhancedTableToolbar = props => { //ตกแต่ง toolbar
         </Typography>
       )}
 
-      {numSelected > 0 ? (  // แสดงปุ่ม delete เมื่อเลือกข้อมูลมากกว่า 1 แถวด้านบน
+      {numSelected > 0 ? (  // แสดงปุ่ม เมื่อเลือกข้อมูลมากกว่า 1 แถวด้านบน
         <React.Fragment>
-        <SimpleModal>
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-        </SimpleModal>
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <Edit />
-          </IconButton>
-        </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton aria-label="delete" >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Edit">
+            <IconButton aria-label="edit">
+              <Edit />
+            </IconButton>
+          </Tooltip>
         </React.Fragment>
       ) : (
         <Tooltip title="Filter list">
@@ -223,7 +223,10 @@ const useStyles = makeStyles(theme => ({
   },
 
   table: {
-    minWidth: 800
+    minWidth: 800,
+  },
+  cellPadding:{
+    padding:'8px',
   },
   visuallyHidden: {
     border: 0,
@@ -240,6 +243,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function EnhancedTable() {
+
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -249,6 +253,7 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
     
   const handleRequestSort = (event, property) => {
+    console.log("handleRequestSort");
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -256,19 +261,19 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = event => { //select all
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.name);
+      const newSelecteds = rows.map(n => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => { //select 
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => { //select 
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
     
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -294,13 +299,11 @@ export default function EnhancedTable() {
   const handleChangeDense = event => {
     setDense(event.target.checked);
   };
-
-  const isSelected = name => selected.indexOf(name) !== -1;
+  
+  const isSelected = id => selected.indexOf(id) !== -1;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
-
 
   return (
     <div className={classes.root}>
@@ -328,30 +331,28 @@ export default function EnhancedTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <React.Fragment>
-                    
                     <TableRow
                       hover
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                       selected={isItemSelected}
                       aria-controls="simple-menu"
                       aria-haspopup="true"
                       onOpen={SpeedDials.handleOpen}
-                      
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           name="checkbox"
                           inputProps={{ "aria-labelledby": labelId }}
-                          onClick={event => handleClick(event, row.name)}
+                          onClick={event => handleClick(event, row.id)}
                         />
                       </TableCell>
                       <TableCell
@@ -361,7 +362,7 @@ export default function EnhancedTable() {
                         padding="none"
                         align="center"
                       >
-                        {row.name}
+                        {row.id}
                       </TableCell>
                       <TableCell align="left">{row.no}</TableCell>
                       <TableCell align="left">{row.date}</TableCell>
@@ -374,7 +375,6 @@ export default function EnhancedTable() {
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left"><SpeedDials /></TableCell>
                       </TableRow>
-                     
                     </React.Fragment>
                   );
                 })}
@@ -386,7 +386,7 @@ export default function EnhancedTable() {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        <TablePagination  //pagination options
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}

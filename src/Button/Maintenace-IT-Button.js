@@ -70,7 +70,7 @@ export default function NestedList() {
       aria-labelledby="nested-list-subheader"
       className={classes.root}
     >
-      <MyButton />  
+      
         <ListItem button component={Link} to="/" onClick={() => closeChild()}
         classes={{root:classes.ListItem}}
         >

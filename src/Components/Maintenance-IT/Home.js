@@ -13,14 +13,7 @@ import SpeedDials from '../../speedDial'
 import StickyFooter from '../../stickyFooter'
 import AddressForm from '../../Form/AddressForm'
 import Checkout from '../../Form/Checkout'
-
-
 import Layout from '../Layout'  
-
-import Lorem from '../../Lorem'
-import Chart from '../../Chart';
-import Deposits from '../../Deposits';
-import Orders from '../../Orders';
 
 const styles = theme => ({
     container: {
@@ -71,7 +64,7 @@ class Home extends Component {
                     {/* <div className={classes.appBarSpacer} /> */}
                     <Container maxWidth="lg" className={classes.container}>
                     <Grid container spacing={3}>
-                        {/* Chart */}
+                         
                         <Grid item xs={12} md={6} lg={6}>
                         <Paper className={fixedHeightPaper}>
                         </Paper>
