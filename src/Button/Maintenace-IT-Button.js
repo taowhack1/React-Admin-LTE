@@ -23,7 +23,6 @@ import MenuBook from '@material-ui/icons/MenuBook';
 import Add from '@material-ui/icons/Add';
 import Person from '@material-ui/icons/Person';
 import DeviceHub from '@material-ui/icons/DeviceHub';
-import MyButton from './testButtonActive'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,7 +35,6 @@ const useStyles = makeStyles(theme => ({
   },
   activeButton:{
     "&:active": {
-      
     }
   },
   nested: {
